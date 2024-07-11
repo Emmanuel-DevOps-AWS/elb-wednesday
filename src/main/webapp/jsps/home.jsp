@@ -12,7 +12,7 @@
 <h1 align="center">Welcome to Xashy Web Application TomCat project deployed by github</h1>
 <h1 align="center">We are developing and supporting quality Software Solutions to Billions of clients all over the world.
 	           We are raising millionaires in IT automation.
-we offer AWS and DevOps training and our next class starts in August 2nd </h1>
+we offer AWS and DevOps  training and our next class starts in August 2nd </h1>
 <hr>
 <br>
 	<h1><h3> Server Side IP Address </h3><br>
