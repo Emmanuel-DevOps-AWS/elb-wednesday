@@ -25,7 +25,7 @@ jobs:
             - name: upload artifact into artifact repository
               run: mvn --batch-mode deploy
               env:
-                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             
             - name: authenticate into AWS
               uses: aws-actions/configure-aws-credentials@v1
