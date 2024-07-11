@@ -1,0 +1,50 @@
+name: Build application with Maven and deploy to Elastic Beanstalk
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    Elastic-beanstalk-deployment:
+        name: Deploy to prod
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v3
+
+            - name: setup Java and Maven
+              uses: actions/setup-java@v3
+              with:
+                distribution: "adopt"
+                java-version: "11"
+
+            - name: Maven build
+              run: mvn clean package
+            
+            - name: upload artifact into artifact repository
+              run: mvn --batch-mode deploy
+              env:
+                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            
+            - name: authenticate into AWS
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+                aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+                aws-region: ${{ secrets.AWS_REGION }}
+            
+            - name: copy artifact into S3
+              run: aws s3 cp target/*.war s3://mmayyven-test-bucket
+
+            - name: create application version
+              run: |
+                aws elasticbeanstalk create-application-version \
+                  --application-name xashy-test \
+                  --source-bundle s3Bucket="mmayyven-test-bucket",S3Key="xashy-webapp.war" \
+                  --version-label "ver-${{ github.sha }}"
+                  --description "commit-sha-${{ github.sha }}"
+
+            - name: deploy to elastic beanstalk
+              run: aws elasticbeanstalk update-environment --environment-name Xashy-test-environment --version-label "ver-${{ github.sha }}"
+              
