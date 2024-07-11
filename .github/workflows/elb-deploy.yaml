@@ -45,7 +45,7 @@ jobs:
                 aws elasticbeanstalk create-application-version \
                   --application-name xashy-test \
                   --source-bundle S3Bucket="mmayyven-test-bucket",S3Key="xashy-webapp.war" \
-                  --version-label "ver-${{ github.sha }}"
+                  --version-label "ver-${{ github.sha }}" \
                   --description "commit-sha-${{ github.sha }}"
 
             - name: deploy to elastic beanstalk
